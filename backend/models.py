@@ -1,9 +1,9 @@
 from datetime import date
 from email.policy import default
 
-from constraints import *
+from .constraints import *
 from sqlalchemy import CheckConstraint
-from extensions import db, bcrypt, login_manager
+from .extensions import db, bcrypt, login_manager
 from flask_login import UserMixin
 
 @login_manager.user_loader

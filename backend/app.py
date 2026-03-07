@@ -1,7 +1,7 @@
 from flask import Flask
-from config import Config
-from extensions import db, login_manager, bcrypt, csrf
-from models import User, Role
+from .config import Config
+from .extensions import db, login_manager, bcrypt
+from .models import User, Role
 
 
 def create_app():
@@ -10,15 +10,11 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
-    csrf.init_app(app)
     bcrypt.init_app(app)
 
     login_manager.login_view = 'auth.login'
 
-    from auth import auth_bp
-    from admin import admin_bp
-    from company import company_bp
-    from student import student_bp
+    from .api import auth_bp, admin_bp, company_bp, student_bp
 
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(admin_bp, url_prefix='/admin')

@@ -2,7 +2,6 @@
   <div class="container">
     <Navbar />
     <router-view />
-
   </div>
 </template>
 
@@ -34,4 +33,4 @@ watch(
 )
 </script>
 
-<style></style>
+<style scoped></style>

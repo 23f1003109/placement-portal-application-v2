@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from .config import Config
 from .extensions import db, login_manager, bcrypt
 from .models import User, Role
@@ -7,6 +8,12 @@ from .models import User, Role
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    CORS(
+        app,
+        supports_credentials=True,
+        origins=["http://localhost:5173"]
+    )
 
     db.init_app(app)
     login_manager.init_app(app)

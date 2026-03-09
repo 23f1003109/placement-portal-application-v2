@@ -1,0 +1,16 @@
+export const genericHeaderMap = {
+  id: { label: 'ID' },
+  name: { label: 'Name' },
+  industry: { label: 'Industry' },
+  hr_name: { label: 'HR Name' },
+  hr_email: { label: 'HR Email' },
+  hr_contact: { label: 'HR Contact' },
+  department: { label: 'Department' },
+  degree: { label: 'Degree' },
+  contact_number: { label: 'Contact Number' },
+  job_title: { label: 'Job Title' },
+  job_location: { label: 'Job Location' },
+  drive_name: { label: 'Drive Name' },
+  company_name: { label: 'Company Name' },
+  application_date: { label: 'Application Date' },
+}

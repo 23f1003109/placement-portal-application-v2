@@ -27,7 +27,10 @@
 <script setup>
 import { reactive } from 'vue'
 import FormField from '@/components/FormField.vue'
+import router from '@/router/index.js'
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 const form = reactive({
   username: '',
   password: '',
@@ -36,7 +39,7 @@ const form = reactive({
 const errors = reactive({
   username: [],
   password: [],
-  _form: [],
+  form: [],
 })
 
 const formFields = [
@@ -57,12 +60,16 @@ async function submit() {
     },
     body: JSON.stringify(form),
   })
+
   let data = {}
   try {
     data = await res.json()
   } catch {}
+
   if (!res.ok) {
     Object.assign(errors, data.errors || {})
+  } else if (data.user?.role === 'admin') {
+    router.replace('/admin')
   }
 }
 </script>

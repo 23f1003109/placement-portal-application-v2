@@ -72,6 +72,8 @@ async function submit() {
     router.replace('/admin')
   } else if (data.user?.role === 'company') {
     router.replace('/company')
+  } else if (data.user?.role === 'student') {
+    router.replace('/student')
   }
 }
 </script>

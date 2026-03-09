@@ -10,6 +10,12 @@ import CompanyDriveCreate from '@/views/CompanyDriveCreate.vue'
 import CompanyDriveDetails from '@/views/CompanyDriveDetails.vue'
 import CompanyProfileEdit from '@/views/CompanyProfileEdit.vue'
 import SeedDatabase from '@/components/SeedDatabase.vue'
+import StudentCompanyDetails from '@/views/StudentCompanyDetails.vue'
+import StudentDashboard from '@/views/StudentDashboard.vue'
+import StudentDriveApply from '@/views/StudentDriveApply.vue'
+import StudentDriveDetails from '@/views/StudentDriveDetails.vue'
+import StudentHistory from '@/views/StudentHistory.vue'
+import StudentProfileEdit from '@/views/StudentProfileEdit.vue'
 
 const routes = [
   {
@@ -69,6 +75,36 @@ const routes = [
   {
     path: '/company/applications/:id',
     component: CompanyApplicationReview,
+    meta: { layout: 'mini' },
+  },
+  {
+    path: '/student',
+    component: StudentDashboard,
+    meta: { layout: 'full' },
+  },
+  {
+    path: '/student/profile/edit',
+    component: StudentProfileEdit,
+    meta: { layout: 'mini' },
+  },
+  {
+    path: '/student/history',
+    component: StudentHistory,
+    meta: { layout: 'full' },
+  },
+  {
+    path: '/student/companies/:id',
+    component: StudentCompanyDetails,
+    meta: { layout: 'full' },
+  },
+  {
+    path: '/student/drives/:id',
+    component: StudentDriveDetails,
+    meta: { layout: 'mini' },
+  },
+  {
+    path: '/student/drives/:id/apply',
+    component: StudentDriveApply,
     meta: { layout: 'mini' },
   },
 ]

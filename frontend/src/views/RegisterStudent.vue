@@ -62,7 +62,7 @@ async function submit() {
   for (const key in errors) {
     errors[key] = []
   }
-  const res = await fetch(`${API_BASE_URL}/register/student`, {
+  const res = await fetch(`${API_BASE_URL}/auth/register/student`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -85,3 +85,4 @@ async function submit() {
 </script>
 
 <style scoped></style>
+

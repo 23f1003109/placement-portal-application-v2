@@ -4,6 +4,11 @@ import RegisterStudent from '@/views/RegisterStudent.vue'
 import RegisterCompany from '@/views/RegisterCompany.vue'
 import AdminDashboard from '@/views/AdminDashboard.vue'
 import AdminEntityDetails from '@/views/AdminEntityDetails.vue'
+import CompanyApplicationReview from '@/views/CompanyApplicationReview.vue'
+import CompanyDashboard from '@/views/CompanyDashboard.vue'
+import CompanyDriveCreate from '@/views/CompanyDriveCreate.vue'
+import CompanyDriveDetails from '@/views/CompanyDriveDetails.vue'
+import CompanyProfileEdit from '@/views/CompanyProfileEdit.vue'
 import SeedDatabase from '@/components/SeedDatabase.vue'
 
 const routes = [
@@ -32,14 +37,39 @@ const routes = [
     meta: { layout: 'full' },
   },
   {
+    path: '/admin/seed',
+    component: SeedDatabase,
+    meta: { layout: 'full' },
+  },
+  {
     path: '/admin/:entityType/:id',
     component: AdminEntityDetails,
     meta: { layout: 'mini' },
   },
   {
-    path: '/admin/seed',
-    component: SeedDatabase,
+    path: '/company',
+    component: CompanyDashboard,
     meta: { layout: 'full' },
+  },
+  {
+    path: '/company/profile/edit',
+    component: CompanyProfileEdit,
+    meta: { layout: 'mini' },
+  },
+  {
+    path: '/company/drives/new',
+    component: CompanyDriveCreate,
+    meta: { layout: 'mini' },
+  },
+  {
+    path: '/company/drives/:id',
+    component: CompanyDriveDetails,
+    meta: { layout: 'full' },
+  },
+  {
+    path: '/company/applications/:id',
+    component: CompanyApplicationReview,
+    meta: { layout: 'mini' },
   },
 ]
 

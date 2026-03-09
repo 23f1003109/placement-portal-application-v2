@@ -70,6 +70,8 @@ async function submit() {
     Object.assign(errors, data.errors || {})
   } else if (data.user?.role === 'admin') {
     router.replace('/admin')
+  } else if (data.user?.role === 'company') {
+    router.replace('/company')
   }
 }
 </script>

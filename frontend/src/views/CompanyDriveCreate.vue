@@ -11,6 +11,7 @@
       :type="field.type"
       :as="field.as"
       :rows="field.rows"
+      :options="field.options"
       :label="field.label"
       v-model="form[field.id]"
       :errors="errors[field.id]"
@@ -37,6 +38,9 @@ const form = reactive({
   job_description: '',
   job_location: '',
   eligibility_criteria: '',
+  required_skills: '',
+  experience_required: '',
+  benefits: '',
   salary: '',
   application_deadline: '',
 })
@@ -47,6 +51,9 @@ const errors = reactive({
   job_description: [],
   job_location: [],
   eligibility_criteria: [],
+  required_skills: [],
+  experience_required: [],
+  benefits: [],
   salary: [],
   application_deadline: [],
   _form: [],
@@ -58,6 +65,9 @@ const formFields = [
   { id: 'job_description', label: 'Job Description', as: 'textarea', rows: 4 },
   { id: 'job_location', label: 'Job Location', type: 'text' },
   { id: 'eligibility_criteria', label: 'Eligibility Criteria', as: 'textarea', rows: 4 },
+  { id: 'required_skills', label: 'Required Skills', as: 'textarea', rows: 3 },
+  { id: 'experience_required', label: 'Experience Required', type: 'text' },
+  { id: 'benefits', label: 'Benefits', as: 'textarea', rows: 3 },
   { id: 'salary', label: 'Salary', type: 'number' },
   { id: 'application_deadline', label: 'Application Deadline', type: 'date' },
 ]

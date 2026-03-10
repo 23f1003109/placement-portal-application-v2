@@ -6,6 +6,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 export const useStudentStore = defineStore('student', () => {
   const student = ref(null)
   const companies = ref([])
+  const availableDrives = ref([])
   const appliedApplications = ref([])
   const history = ref([])
   const currentCompany = ref(null)
@@ -42,6 +43,7 @@ export const useStudentStore = defineStore('student', () => {
     const data = await request('/student/dashboard')
     student.value = data.student
     companies.value = data.companies
+    availableDrives.value = data.available_drives
     appliedApplications.value = data.applied_applications
     return data
   }
@@ -58,6 +60,13 @@ export const useStudentStore = defineStore('student', () => {
       body: JSON.stringify(payload),
     })
     student.value = data
+    return data
+  }
+
+  async function fetchAvailableDrives(params = '') {
+    const suffix = params ? `?${params}` : ''
+    const data = await request(`/student/drives${suffix}`)
+    availableDrives.value = data
     return data
   }
 
@@ -90,6 +99,7 @@ export const useStudentStore = defineStore('student', () => {
   return {
     student,
     companies,
+    availableDrives,
     appliedApplications,
     history,
     currentCompany,
@@ -98,6 +108,7 @@ export const useStudentStore = defineStore('student', () => {
     fetchDashboard,
     fetchProfile,
     updateProfile,
+    fetchAvailableDrives,
     fetchHistory,
     fetchCompany,
     fetchDrive,

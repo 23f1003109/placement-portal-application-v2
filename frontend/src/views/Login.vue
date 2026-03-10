@@ -39,7 +39,7 @@ const form = reactive({
 const errors = reactive({
   username: [],
   password: [],
-  form: [],
+  _form: [],
 })
 
 const formFields = [
@@ -68,11 +68,24 @@ async function submit() {
 
   if (!res.ok) {
     Object.assign(errors, data.errors || {})
-  } else if (data.user?.role === 'admin') {
+    return
+  }
+
+  if (data.user?.role === 'admin') {
     router.replace('/admin')
   } else if (data.user?.role === 'company') {
-    router.replace('/company')
+    if (data.user?.company?.is_blacklisted) {
+      errors._form = ['Your company account has been blacklisted.']
+      return
+    }
+
+    router.replace(data.user?.company?.is_approved ? '/company' : '/company/profile/edit')
   } else if (data.user?.role === 'student') {
+    if (data.user?.student?.is_blacklisted) {
+      errors._form = ['Your student account has been blacklisted.']
+      return
+    }
+
     router.replace('/student')
   }
 }

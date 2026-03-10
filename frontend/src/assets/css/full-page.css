@@ -160,6 +160,7 @@ a{
     border: 3px solid black;
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 24px;
 }
 
 .list_display-item {

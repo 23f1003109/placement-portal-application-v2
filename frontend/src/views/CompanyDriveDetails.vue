@@ -1,21 +1,24 @@
 <template>
-  <h1 class="view_details-header">Update Applications for the Drive</h1>
-  <p class="drive-meta">Job Title: {{ form.job_title || 'N/A' }}</p>
-
-  <section class="applications-section">
-    <h2>Received Applications</h2>
-    <div class="scroll-wrapper">
-      <TableDisplay
-        :buttonsPresent="true"
-        :buttons="buttons"
-        :rows="store.driveApplications"
-        :columns="headers"
-      />
+  <article>
+    <div class="secondary-header">
+      <h1 class="view_details-header">Update Applications for the Drive</h1>
+      <p class="drive-meta">Job Title: {{ form.job_title || 'N/A' }}</p>
     </div>
-  </section>
-  <div class="view_details-buttons">
-    <router-link to="/company" class="view_details-button item__button-blue">Back</router-link>
-  </div>
+    <section class="list_display">
+      <h2 class="list_display-header">Received Applications</h2>
+      <div class="scroll-wrapper">
+        <TableDisplay
+          :buttonsPresent="true"
+          :buttons="buttons"
+          :rows="store.driveApplications"
+          :columns="headers"
+        />
+      </div>
+      <div class="view_details-buttons">
+        <router-link to="/company" class="view_details-button item__button-blue">Back</router-link>
+      </div>
+    </section>
+  </article>
 </template>
 
 <script setup>
@@ -23,6 +26,7 @@ import { onMounted, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCompanyStore } from '@/stores/companyStore'
 import TableDisplay from '@/components/TableDisplay.vue'
+import SecondaryHeader from '@/components/SecondaryHeader.vue'
 
 const route = useRoute()
 const router = useRouter()

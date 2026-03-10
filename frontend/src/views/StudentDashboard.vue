@@ -15,6 +15,17 @@
   />
 
   <ListDisplay
+    :title="'Available Drives'"
+    tableKey="student_available_drives"
+    :filterEnabled="true"
+    :buttonsPresent="true"
+    :buttons="driveButtons"
+    :options="driveFilterOptions"
+    :table="availableDrivesTable"
+    :onFilter="handleDriveFilter"
+  />
+
+  <ListDisplay
     :title="'Applied Drives'"
     tableKey="student_applications"
     :filterEnabled="false"
@@ -39,11 +50,25 @@ const companyHeader = [
   { key: 'name', content: 'Organization', colspan: 1 },
 ]
 
+const availableDrivesHeader = [
+  { key: 'name', content: 'Drive Name', colspan: 1 },
+  { key: 'company_name', content: 'Company', colspan: 1 },
+  { key: 'job_title', content: 'Job Title', colspan: 1 },
+  { key: 'application_deadline', content: 'Deadline', colspan: 1 },
+]
+
 const applicationHeader = [
   { key: 'drive_id', content: 'Serial No.', colspan: 1 },
   { key: 'drive_name', content: 'Drive Name', colspan: 1 },
   { key: 'company_name', content: 'Company', colspan: 1 },
   { key: 'application_date', content: 'Date', colspan: 1 },
+]
+
+const driveFilterOptions = [
+  { key: 'company_name', label: 'Company' },
+  { key: 'job_title', label: 'Job Title' },
+  { key: 'name', label: 'Drive Name' },
+  { key: 'eligibility_criteria', label: 'Eligibility' },
 ]
 
 const companyButtons = [
@@ -52,6 +77,15 @@ const companyButtons = [
     label: 'View Details',
     cls: 'blue',
     onClick: (company) => router.push(`/student/companies/${company.id}`),
+  },
+]
+
+const driveButtons = [
+  {
+    key: 'view_drive',
+    label: 'View Details',
+    cls: 'blue',
+    onClick: (drive) => router.push(`/student/drives/${drive.id}`),
   },
 ]
 
@@ -69,6 +103,11 @@ const companiesTable = computed(() => ({
   data: store.companies,
 }))
 
+const availableDrivesTable = computed(() => ({
+  headers: availableDrivesHeader,
+  data: store.availableDrives,
+}))
+
 const applicationsTable = computed(() => ({
   headers: applicationHeader,
   data: store.appliedApplications,
@@ -77,6 +116,10 @@ const applicationsTable = computed(() => ({
 onMounted(() => {
   store.fetchDashboard()
 })
+
+function handleDriveFilter(params) {
+  store.fetchAvailableDrives(params)
+}
 </script>
 
 <style scoped></style>

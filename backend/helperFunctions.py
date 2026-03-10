@@ -17,12 +17,11 @@ def role_required(role):
         return wrapper
     return decorator
 
+
 def bool_parser(value):
     if value is None:
         return None
     return value.lower() in {"true", "yes", "1"}
-
-
 
 
 def serialize_company(company):
@@ -64,13 +63,20 @@ def serialize_drive(drive):
         "job_description": drive.job_description,
         "job_location": drive.job_location,
         "eligibility_criteria": drive.eligibility_criteria,
+        "required_skills": getattr(drive, 'required_skills', None),
+        "experience_required": getattr(drive, 'experience_required', None),
+        "benefits": getattr(drive, 'benefits', None),
         "application_deadline": drive.application_deadline.isoformat() if drive.application_deadline else None,
         "salary": drive.salary,
         "is_completed": drive.is_completed,
+        "is_approved": getattr(drive, 'is_approved', False),
     }
 
 
 def serialize_application(application):
+    interview = getattr(application, 'interview_schedule', None)
+    placement = getattr(application, 'placement', None)
+
     return {
         "id": application.id,
         "student_id": application.student_id,
@@ -82,4 +88,14 @@ def serialize_application(application):
         "application_date": application.application_date.isoformat() if application.application_date else None,
         "status": application.status,
         "resume_link": application.resume_link,
+        "remark": application.remark,
+        "interview_date": interview.interview_date.isoformat() if interview and interview.interview_date else None,
+        "interview_mode": interview.mode if interview else None,
+        "interview_location": interview.location if interview else None,
+        "interview_feedback": interview.feedback if interview else None,
+        "placement_position": placement.position if placement else None,
+        "placement_salary": placement.salary if placement else None,
+        "joining_date": placement.joining_date.isoformat() if placement and placement.joining_date else None,
+        "offer_letter_link": placement.offer_letter_link if placement else None,
+        "is_placed": placement is not None,
     }

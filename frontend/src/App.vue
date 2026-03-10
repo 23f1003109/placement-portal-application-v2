@@ -6,31 +6,44 @@
 </template>
 
 <script setup>
-import { watch } from 'vue'
-import { useRoute} from 'vue-router'
-import Navbar from "./components/Navbar.vue";
+import { onBeforeUnmount, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import Navbar from './components/Navbar.vue'
+import fullPageStylesheetHref from '@/assets/css/full-page.css?url'
+import miniPageStylesheetHref from '@/assets/css/mini-page.css?url'
 
-const route = useRoute();
-function loadLayout(layout) {
-  const existing = document.getElementById('layout-style');
-  if (existing) {
-    existing.remove();
+const route = useRoute()
+const layoutStylesheetId = 'layout-stylesheet'
+
+function getLayoutStylesheetHref(layout) {
+  return layout === 'mini' ? miniPageStylesheetHref : fullPageStylesheetHref
+}
+
+function attachLayoutStylesheet(layout) {
+  const stylesheetHref = getLayoutStylesheetHref(layout)
+  let stylesheetLink = document.getElementById(layoutStylesheetId)
+
+  if (!(stylesheetLink instanceof HTMLLinkElement)) {
+    stylesheetLink = document.createElement('link')
+    stylesheetLink.id = layoutStylesheetId
+    stylesheetLink.rel = 'stylesheet'
+    document.head.appendChild(stylesheetLink)
   }
-  const link = document.createElement('link')
-  link.id = 'layout-style'
-  link.rel = 'stylesheet'
-  link.href = layout === 'mini'
-    ? '/src/assets/css/mini-page.css'
-    : '/src/assets/css/full-page.css'
 
-  document.head.appendChild(link)
+  if (stylesheetLink.href !== stylesheetHref) {
+    stylesheetLink.href = stylesheetHref
+  }
 }
 
 watch(
   () => route.meta.layout,
-  (layout) => loadLayout(layout || 'full'),
-  { immediate: true }
+  (layout) => attachLayoutStylesheet(layout || 'full'),
+  { immediate: true },
 )
+
+onBeforeUnmount(() => {
+  document.getElementById(layoutStylesheetId)?.remove()
+})
 </script>
 
 <style scoped></style>

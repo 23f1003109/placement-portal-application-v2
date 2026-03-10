@@ -28,8 +28,9 @@ const store = useStudentStore()
 const historyHeader = [
   { key: 'drive_name', content: 'Drive Name', colspan: 1 },
   { key: 'company_name', content: 'Company', colspan: 1 },
-  { key: 'application_date', content: 'Application Date', colspan: 1 },
   { key: 'status', content: 'Status', colspan: 1 },
+  { key: 'interview_date', content: 'Interview Date', colspan: 1 },
+  { key: 'joining_date', content: 'Joining Date', colspan: 1 },
 ]
 
 const historyButtons = [

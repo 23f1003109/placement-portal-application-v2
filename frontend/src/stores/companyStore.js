@@ -31,6 +31,7 @@ export const useCompanyStore = defineStore('company', () => {
     if (!response.ok) {
       const error = new Error(data?.error || data?.message || 'Request failed.')
       error.payload = data
+      error.status = response.status
       throw error
     }
 

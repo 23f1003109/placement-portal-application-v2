@@ -1,14 +1,15 @@
 from datetime import date
-from email.policy import default
 
 from .constraints import *
 from sqlalchemy import CheckConstraint
 from .extensions import db, bcrypt, login_manager
 from flask_login import UserMixin
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.get(User, user_id)
+
 
 class Role(db.Model):
     __tablename__ = "roles"
@@ -47,6 +48,7 @@ class User(db.Model, UserMixin):
     def check_password(self, raw_password):
         return bcrypt.check_password_hash(self.hashed_password, raw_password)
 
+
 class Student(db.Model):
     __tablename__ = "students"
     __exposed_fields__ = {
@@ -69,11 +71,11 @@ class Student(db.Model):
     is_blacklisted = db.Column(db.Boolean, default=False)
 
     applications = db.relationship('Application', back_populates='student', cascade='all, delete-orphan')
+    placements = db.relationship('Placement', back_populates='student', cascade='all, delete-orphan')
 
     @classmethod
     def exposed_fields(cls):
         return cls.__exposed_fields__
-
 
 
 class Company(db.Model):
@@ -110,11 +112,12 @@ class Company(db.Model):
     is_blacklisted = db.Column(db.Boolean, default=False)
 
     drives =db.relationship('Drive', back_populates='company', cascade='all, delete-orphan')
+    placements = db.relationship('Placement', back_populates='company', cascade='all, delete-orphan')
 
     @classmethod
     def exposed_fields(cls):
         return cls.__exposed_fields__
-    
+
 
 class Drive(db.Model):
     __tablename__ = "drives"
@@ -126,6 +129,9 @@ class Drive(db.Model):
         "job_description": "Job Description",
         "job_location": "Job Location",
         "eligibility_criteria": "Eligibility Criteria",
+        "required_skills": "Required Skills",
+        "experience_required": "Experience Required",
+        "benefits": "Benefits",
         "application_deadline": "Application Deadline",
         "salary": "Salary"
     }
@@ -138,9 +144,13 @@ class Drive(db.Model):
     job_description = db.Column(db.Text)
     job_location = db.Column(db.Text)
     eligibility_criteria = db.Column(db.Text)
+    required_skills = db.Column(db.Text)
+    experience_required = db.Column(db.Text)
+    benefits = db.Column(db.Text)
     application_deadline = db.Column(db.Date, nullable=False)
     salary = db.Column(db.Integer, nullable=False)
     is_completed = db.Column(db.Boolean, nullable=False, default=False)
+    is_approved = db.Column(db.Boolean, nullable=False, default=False)
 
     company = db.relationship('Company', back_populates='drives')
     applications = db.relationship('Application', back_populates='drive', cascade='all, delete-orphan')
@@ -160,6 +170,7 @@ class Application(db.Model):
         "status": "Status",
         "resume_link": "Resume Link"
     }
+
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
     student = db.relationship('Student', back_populates='applications')
@@ -169,8 +180,11 @@ class Application(db.Model):
 
     application_date = db.Column(db.Date, default=date.today)
     status = db.Column(db.String(MAX_STATUS_TEXT_LENGTH), default="applied")
-    remark = db.Column(db.Text,default='None')
+    remark = db.Column(db.Text, default='None')
     resume_link = db.Column(db.Text, nullable=False)
+
+    interview_schedule = db.relationship('InterviewSchedule', back_populates='application', uselist=False, cascade='all, delete-orphan')
+    placement = db.relationship('Placement', back_populates='application', uselist=False, cascade='all, delete-orphan')
 
     __table_args__ = (
         db.UniqueConstraint('student_id', 'drive_id', name='unique_application'),
@@ -184,3 +198,33 @@ class Application(db.Model):
     @classmethod
     def exposed_fields(cls):
         return cls.__exposed_fields__
+
+
+class InterviewSchedule(db.Model):
+    __tablename__ = 'interview_schedules'
+
+    id = db.Column(db.Integer, primary_key=True)
+    application_id = db.Column(db.Integer, db.ForeignKey('applications.id'), nullable=False, unique=True)
+    interview_date = db.Column(db.Date)
+    mode = db.Column(db.String(MAX_NAME_LENGTH))
+    location = db.Column(db.Text)
+    feedback = db.Column(db.Text)
+
+    application = db.relationship('Application', back_populates='interview_schedule')
+
+
+class Placement(db.Model):
+    __tablename__ = 'placements'
+
+    id = db.Column(db.Integer, primary_key=True)
+    application_id = db.Column(db.Integer, db.ForeignKey('applications.id'), nullable=False, unique=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.id'), nullable=False)
+    position = db.Column(db.String(MAX_NAME_LENGTH), nullable=False)
+    salary = db.Column(db.Integer)
+    joining_date = db.Column(db.Date)
+    offer_letter_link = db.Column(db.Text)
+
+    application = db.relationship('Application', back_populates='placement')
+    student = db.relationship('Student', back_populates='placements')
+    company = db.relationship('Company', back_populates='placements')

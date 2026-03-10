@@ -59,6 +59,10 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  onFilter: {
+    type: Function,
+    default: null,
+  },
 })
 
 function unpack_payload(payload) {
@@ -67,6 +71,11 @@ function unpack_payload(payload) {
   }
 
   const params = new URLSearchParams({ [payload.filter_by]: query_string.value })
+
+  if (typeof props.onFilter === 'function') {
+    props.onFilter(params, payload)
+    return
+  }
 
   if (props.tableKey === 'approved_companies') {
     store.fetchCompanies(params)

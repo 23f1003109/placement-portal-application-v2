@@ -7,69 +7,31 @@ export const useAdminDashboardStore = defineStore('adminDashboard', () => {
   const companies = ref([])
   const students = ref([])
   const unapprovedCompanies = ref([])
+  const pendingDrives = ref([])
   const ongoingDrives = ref([])
   const applications = ref([])
 
   const companyHeader = ref([
-    {
-      key: 'name',
-      content: 'Name',
-      colspan: 1,
-    }
+    { key: 'name', content: 'Name', colspan: 1 },
   ])
 
   const studentHeader = ref([
-    {
-      key: 'name',
-      content: 'Name',
-      colspan: 1,
-    },
+    { key: 'name', content: 'Name', colspan: 1 },
   ])
 
   const drivesHeader = ref([
-    {
-      key: 'id',
-      colspan: 1,
-      content: 'ID',
-    },
-    {
-      key: 'name',
-      colspan: 1,
-      content: 'Drive Name',
-    },
-    {
-      key: 'application_deadline',
-      colspan: 1,
-      content: 'Deadline',
-    },
+    { key: 'id', colspan: 1, content: 'ID' },
+    { key: 'name', colspan: 1, content: 'Drive Name' },
+    { key: 'company_name', colspan: 1, content: 'Company' },
+    { key: 'application_deadline', colspan: 1, content: 'Deadline' },
   ])
 
   const applicationHeader = ref([
-    {
-      key: 'id',
-      colspan: 1,
-      content: 'ID',
-    },
-    {
-      key: 'student_name',
-      colspan: 1,
-      content: 'Student Name',
-    },
-    {
-      key: 'drive_name',
-      colspan: 1,
-      content: 'Drive Name',
-    },
-    {
-      key: 'company_name',
-      colspan: 1,
-      content: 'Company Name',
-    },
-    {
-      key: 'application_date',
-      colspan: 1,
-      content: 'Application Date',
-    },
+    { key: 'id', colspan: 1, content: 'ID' },
+    { key: 'student_name', colspan: 1, content: 'Student Name' },
+    { key: 'drive_name', colspan: 1, content: 'Drive Name' },
+    { key: 'company_name', colspan: 1, content: 'Company Name' },
+    { key: 'application_date', colspan: 1, content: 'Application Date' },
   ])
 
   async function fetchCompanies(params = '') {
@@ -93,8 +55,15 @@ export const useAdminDashboardStore = defineStore('adminDashboard', () => {
     unapprovedCompanies.value = await res.json()
   }
 
+  async function fetchPendingDrives() {
+    const res = await fetch(`${API_BASE_URL}/admin/drives?is_approved=false&is_completed=false`, {
+      credentials: 'include',
+    })
+    pendingDrives.value = await res.json()
+  }
+
   async function fetchOngoingDrives() {
-    const res = await fetch(`${API_BASE_URL}/admin/drives?is_completed=false`, {
+    const res = await fetch(`${API_BASE_URL}/admin/drives?is_completed=false&is_approved=true`, {
       credentials: 'include',
     })
     ongoingDrives.value = await res.json()
@@ -124,7 +93,6 @@ export const useAdminDashboardStore = defineStore('adminDashboard', () => {
       method: 'POST',
       credentials: 'include',
     })
-
     await fetchCompanies()
   }
 
@@ -133,7 +101,6 @@ export const useAdminDashboardStore = defineStore('adminDashboard', () => {
       method: 'POST',
       credentials: 'include',
     })
-
     await fetchStudents()
   }
 
@@ -142,8 +109,15 @@ export const useAdminDashboardStore = defineStore('adminDashboard', () => {
       method: 'POST',
       credentials: 'include',
     })
+    await Promise.all([fetchUnapprovedCompanies(), fetchCompanies()])
+  }
 
-    await fetchUnapprovedCompanies()
+  async function approveDrive(id) {
+    await fetch(`${API_BASE_URL}/admin/drives/${id}/approve`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+    await Promise.all([fetchPendingDrives(), fetchOngoingDrives()])
   }
 
   async function completeDrive(id) {
@@ -151,7 +125,6 @@ export const useAdminDashboardStore = defineStore('adminDashboard', () => {
       method: 'POST',
       credentials: 'include',
     })
-
     await fetchOngoingDrives()
   }
 
@@ -160,6 +133,7 @@ export const useAdminDashboardStore = defineStore('adminDashboard', () => {
       fetchCompanies(),
       fetchStudents(),
       fetchUnapprovedCompanies(),
+      fetchPendingDrives(),
       fetchOngoingDrives(),
       fetchApplications(),
     ])
@@ -169,17 +143,20 @@ export const useAdminDashboardStore = defineStore('adminDashboard', () => {
     companies,
     students,
     unapprovedCompanies,
+    pendingDrives,
     ongoingDrives,
     applications,
     fetchCompanies,
     fetchStudents,
     fetchUnapprovedCompanies,
+    fetchPendingDrives,
     fetchOngoingDrives,
     fetchApplications,
     fetchEntityDetails,
     toggleCompany,
     toggleStudent,
     approveCompany,
+    approveDrive,
     completeDrive,
     companyHeader,
     studentHeader,

@@ -1,15 +1,15 @@
 <template>
   <SecondaryHeader />
   <ListDisplay
-    v-for="table_item in table_items"
-    :key="table_item.key"
-    :title="table_item.title"
-    :tableKey="table_item.key"
-    :filterEnabled="table_item.filter_enabled"
-    :buttonsPresent="table_item.buttons_present"
-    :buttons="table_item.buttons"
-    :options="table_item.options"
-    :table="table_item.table"
+    v-for="tableItem in tableItems"
+    :key="tableItem.key"
+    :title="tableItem.title"
+    :tableKey="tableItem.key"
+    :filterEnabled="tableItem.filter_enabled"
+    :buttonsPresent="tableItem.buttons_present"
+    :buttons="tableItem.buttons"
+    :options="tableItem.options"
+    :table="tableItem.table"
   />
 </template>
 
@@ -36,7 +36,7 @@ function viewButton(entityType) {
   }
 }
 
-const table_items = computed(() => [
+const tableItems = computed(() => [
   {
     key: 'approved_companies',
     title: 'Approved Companies',
@@ -52,18 +52,9 @@ const table_items = computed(() => [
       },
     ],
     options: [
-      {
-        key: 'name',
-        label: 'Name',
-      },
-      {
-        key: 'company_id',
-        label: 'Company ID',
-      },
-      {
-        key: 'industry',
-        label: 'Industry',
-      },
+      { key: 'name', label: 'Name' },
+      { key: 'company_id', label: 'Company ID' },
+      { key: 'industry', label: 'Industry' },
     ],
     table: {
       headers: store.companyHeader,
@@ -85,18 +76,9 @@ const table_items = computed(() => [
       },
     ],
     options: [
-      {
-        key: 'name',
-        label: 'Name',
-      },
-      {
-        key: 'student_id',
-        label: 'Student ID',
-      },
-      {
-        key: 'contact_number',
-        label: 'Contact Number',
-      },
+      { key: 'name', label: 'Name' },
+      { key: 'student_id', label: 'Student ID' },
+      { key: 'contact_number', label: 'Contact Number' },
     ],
     table: {
       headers: store.studentHeader,
@@ -121,6 +103,26 @@ const table_items = computed(() => [
     table: {
       headers: store.companyHeader,
       data: store.unapprovedCompanies,
+    },
+  },
+  {
+    key: 'approve_drives',
+    title: 'Approve Drives',
+    filter_enabled: false,
+    buttons_present: true,
+    buttons: [
+      viewButton('drives'),
+      {
+        key: 'approve_drive',
+        label: 'Approve',
+        cls: 'green',
+        onClick: (drive) => store.approveDrive(drive.id),
+      },
+    ],
+    options: [],
+    table: {
+      headers: store.drivesHeader,
+      data: store.pendingDrives,
     },
   },
   {
